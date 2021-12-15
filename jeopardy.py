@@ -142,8 +142,8 @@ class mainWindow(QMW):
 
     def buttonhandle(self):
         sender = self.sender()
-        print('cat', sender.cat)
-        print('q', sender.q-1)
+        #print('cat', sender.cat)
+        #print('q', sender.q-1)
         sender.hide()
         self.currentq = (sender.cat, sender.q-1)
         question = self.questions[sender.cat][sender.q-1]  # i hope this works
@@ -158,6 +158,6 @@ class mainWindow(QMW):
 if __name__ == '__main__':
     app = QApp([])
     m = mainWindow(catspath, q_path)
-    print(m.headings)
-    print(m.questions)
+    #print(m.headings)
+    #print(m.questions)
     app.exec()
