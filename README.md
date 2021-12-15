@@ -26,9 +26,8 @@ Now this file (and _ans.txt_) in particular have a specific format you MUST foll
 _Start of file_
 
 _Example question 1 through 5_
-
-
-
+\n
+\n
 _Other questions 1 through 5_
 
 _End of file_
