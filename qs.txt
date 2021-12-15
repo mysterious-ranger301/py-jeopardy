@@ -1,19 +1,19 @@
-My favourite color?
-My favourite subject?
-My favourite country?
-My favourite car brand?
-My favourite programming language?
+Question 1
+Question 2
+Question 3
+Question 4
+Question 5
 
 
-The food I dislike the most?
-Age of my laptop?
-My favourite type of ice cream?
-My worst fear?
-The city I lived in for 7 years?
+Other question 1
+Other question 2
+Other question 3
+Other question 4
+Other question 5
 
 
-My sister's name?
-My brother's name?
-My cat's name?
-My mom's name?
-My dad's name?
+Example question 1
+Example question 2
+Example question 3
+Example question 4
+Example question 5
