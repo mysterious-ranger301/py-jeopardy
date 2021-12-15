@@ -47,6 +47,8 @@ _ans.txt_ names the answers to the questions in _qs.txt_ (there _has_ to be the 
 
 _title.txt_ names the title of the game
 
+If you're still confused, look at the example files you already have (you downloaded them with this).
+
 # Launching
 This is really simple, all you have to do is:
 
