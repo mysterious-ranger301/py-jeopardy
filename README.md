@@ -26,11 +26,16 @@ Now this file (and _ans.txt_) in particular have a specific format you MUST foll
 _Start of file_
 
 _Example question 1 through 5_
+
 \n
+
 \n
+
 _Other questions 1 through 5_
 
 _End of file_
+
+(By the way \n means a newline)
 
 Notice that? There _has to be 2 newlines in between the different questions in order for the program to read the file properly_. 
 
