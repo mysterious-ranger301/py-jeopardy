@@ -22,11 +22,16 @@ _headings.txt_ names the categories of the Jeopardy questions.
 _qs.txt_ names the questions for each category
 
 Now this file (and _ans.txt_) in particular have a specific format you MUST follow in order to customize it:
+
 _Start of file_
+
 _Example question 1 through 5_
 
 
+
+
 _End of file_
+
 Notice that? There _has to be 2 newlines in order for the program to read the file properly_. 
 
 If you do not follow this format, the program will not work.
