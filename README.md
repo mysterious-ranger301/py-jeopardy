@@ -28,11 +28,11 @@ _Start of file_
 _Example question 1 through 5_
 
 
-
+_Other questions 1 through 5_
 
 _End of file_
 
-Notice that? There _has to be 2 newlines in order for the program to read the file properly_. 
+Notice that? There _has to be 2 newlines in between the different questions in order for the program to read the file properly_. 
 
 If you do not follow this format, the program will not work.
 
