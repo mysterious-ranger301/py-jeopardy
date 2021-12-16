@@ -1,5 +1,7 @@
 # py-jeopardy
-A fully customizeable Jeopardy game made with Python and PyQt5
+A fully customizeable Jeopardy game made with Python and PyQt5, now with Team Support!
+
+Last update: 2021/12/16
 
 # Setup
 I assume you have Python installed, but if not, go to https://python.org and download Python.
