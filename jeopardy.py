@@ -19,12 +19,11 @@ from PyQt5.QtGui import QFont
 from teamclass import Team
 import os
 
-catspath = os.path.join('.', 'headings.txt')
-q_path = os.path.join('.', 'qs.txt')
-anspath = os.path.join('.', 'ans.txt')
-titlePath = os.path.join('.', 'title.txt')
-teampath = os.path.join('.', 'teams.txt')
-
+catspath = os.path.join('.', 'config', 'headings.txt')
+q_path = os.path.join('.', 'config', 'qs.txt')
+anspath = os.path.join('.', 'config', 'ans.txt')
+titlePath = os.path.join('.', 'config', 'title.txt')
+teampath = os.path.join('.', 'config', 'teams.txt')
 
 def extractHeadings(path):  # list
     f = open(path)
@@ -77,6 +76,7 @@ def extractTeams(path):
     f.close()
     return c.splitlines()
 
+
 # FOLLOW THIS:
 # q = questions[button.headingindex][button.questionindex]
 # a = same thing ^-^
@@ -98,7 +98,7 @@ class mainWindow(QMW):
         self.baselayout = QGL(self.container)  # setup layout
 
         self.font = QFont()
-        self.font.setPointSize(20)
+        self.font.setPointSize(11)
         self.font.setBold(True)
         self.font.setItalic(False)  # font we'll use
 
@@ -115,12 +115,25 @@ class mainWindow(QMW):
         # add heading text
         self.layout = QGL(self)  # make sublayout
         for h in self.headings:  # set categories/headings
-            exec('self.h_{0} = QLabel(self)'.format(h.replace(' ', '_').replace('(','').replace(')', '')))  # define
-            exec('self.h_{0}.setFont(self.font)'.format(h.replace(' ', '_').replace('(','').replace(')', '')))
-            exec('self.h_{0}.setText("|{1}")'.format(h.replace(' ', '_').replace('(','').replace(')', ''), h))
+            exec(
+                'self.h_{0} = QLabel(self)'.format(
+                    h.replace(' ', '_').replace('(', '').replace(')', '')
+                )
+            )  # define
+            exec(
+                'self.h_{0}.setFont(self.font)'.format(
+                    h.replace(' ', '_').replace('(', '').replace(')', '')
+                )
+            )
+            exec(
+                'self.h_{0}.setText("|{1}")'.format(
+                    h.replace(' ', '_').replace('(', '').replace(')', ''), h
+                )
+            )
             exec(
                 'self.layout.addWidget(self.h_{0}, 1, {1})'.format(
-                    h.replace(' ', '_').replace('(','').replace(')', ''), self.headings.index(h)
+                    h.replace(' ', '_').replace('(', '').replace(')', ''),
+                    self.headings.index(h),
                 )
             )
 
@@ -172,9 +185,6 @@ class mainWindow(QMW):
         self.teamlayout = QGL(self)
         # add team names and score for each team
         for team in self.teams:
-#            label = QLabel(self)
-#            label.setFont(self.font)
-#            label.setText(team.name + ' - Score: {0}'.format(team.score))
             setattr(self, 'tlabel{0}'.format(self.teams.index(team)), QLabel(self))
             label = getattr(self, 'tlabel{0}'.format(self.teams.index(team)))
             label.setFont(self.font)
@@ -189,11 +199,16 @@ class mainWindow(QMW):
 
     def buttonhandle(self):
         sender = self.sender()  # get sender (in this case always a button)
-#        print('cat', sender.cat)
-#        print('q', sender.q-1)
+        #        print('cat', sender.cat)
+        #        print('q', sender.q-1)
         sender.hide()  # hide the button so you can't click it twice
-        self.currentq = (sender.cat, sender.q-1)  # set current question for self.viewanswer
-        question = self.questions[sender.cat][sender.q-1]  # i hope this works
+        self.currentq = (
+            sender.cat,
+            sender.q - 1,
+        )  # set current question for self.viewanswer
+        question = self.questions[sender.cat][sender.q - 1]  # hope this works
+        if len(question) > 50:
+        	question = question[:50] + '\n' + question[51:]
         self.ql.setText(question)  # set text for the viewer
         self.ql.show()  # show it
         self.currentscore = int(sender.text())
@@ -201,7 +216,9 @@ class mainWindow(QMW):
         self.ansbtn.show()  # also show the view answer button
 
     def viewanswer(self):
-        self.ql.setText(self.answers[self.currentq[0]][self.currentq[1]])  # changes the question label to an answer label (wild i know)
+        self.ql.setText(
+            self.answers[self.currentq[0]][self.currentq[1]]
+        )  # changes the question label to an answer label (wild i know)
         self.ansbtn.hide()
         self.rb.show()
         self.wb.show()
@@ -225,7 +242,9 @@ class mainWindow(QMW):
     def updateTeam(self):
         labelIndex = self.teams.index(self.currentTeam)
         label = getattr(self, 'tlabel{0}'.format(labelIndex))
-        label.setText(self.currentTeam.name + ' - Score: ' + str(self.currentTeam.score))
+        label.setText(
+            self.currentTeam.name + ' - Score: ' + str(self.currentTeam.score)
+        )
         if labelIndex == len(self.teams) - 1:
             self.currentTeam = self.teams[0]
         else:
@@ -234,9 +253,11 @@ class mainWindow(QMW):
         self.rb.hide()
         self.wb.hide()
 
+
 if __name__ == '__main__':
     app = QApp([])
     m = mainWindow(catspath, q_path)
-#    print(m.headings)
-#    print(m.questions)
+    #m.maximize_window()
+    #    print(m.headings)
+    #    print(m.questions)
     app.exec()
