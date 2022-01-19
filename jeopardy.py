@@ -19,11 +19,11 @@ from PyQt5.QtGui import QFont
 from teamclass import Team
 import os
 
-catspath = os.path.join('.', 'config', 'headings.txt')
-q_path = os.path.join('.', 'config', 'qs.txt')
-anspath = os.path.join('.', 'config', 'ans.txt')
-titlePath = os.path.join('.', 'config', 'title.txt')
-teampath = os.path.join('.', 'config', 'teams.txt')
+catspath = os.path.join('.', 'headings.txt')
+q_path = os.path.join('.', 'qs.txt')
+anspath = os.path.join('.', 'ans.txt')
+titlePath = os.path.join('.', 'title.txt')
+teampath = os.path.join('.', 'teams.txt')
 
 def extractHeadings(path):  # list
     f = open(path)
