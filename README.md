@@ -1,7 +1,13 @@
 # py-jeopardy
 A fully customizeable Jeopardy game made with Python and PyQt5, now with Team Support!
 
-Last update: 2022/01/19 (YYYY-MM-DD)
+Last update: 2022/03/27 (YYYY-MM-DD)
+
+# What's new in update 22.03.27
+
+ - Uploaded executable (for Windows)
+ - Added Final Question
+ - Code is even messier, but it works!
 
 # Setup
 I assume you have Python installed, but if not, go to https://python.org and download Python.
