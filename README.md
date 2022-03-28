@@ -1,5 +1,5 @@
 # py-jeopardy
-A fully customizeable Jeopardy game made with Python and PyQt5, now with Team Support!
+A fully customizeable Jeopardy game made with Python and PyQt5!
 
 Last update: 2022/03/27 (YYYY-MM-DD)
 
@@ -57,7 +57,7 @@ _ans.txt_ names the answers to the questions in _qs.txt_ (there _has_ to be the 
 
 _title.txt_ names the title of the game
 
-_final\_q\_a.txt_ has the final question and answer, question being on line 1, ans answer being on line 2
+_final\_q\_a.txt_ has the final question and answer, question being on line 1, and answer being on line 2
 
 *Example Final Question*
 
