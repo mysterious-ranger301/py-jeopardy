@@ -5,6 +5,7 @@ Created on Mon Dec 13 13:00:29 2021
 
 @author: alexey
 Jeopardy.py - a Jeopardy game made with PyQt5
+Version 22.03.27
 """
 
 from PyQt5.QtWidgets import (
@@ -14,6 +15,8 @@ from PyQt5.QtWidgets import (
     QGridLayout as QGL,
     QWidget,
     QLabel,
+    QInputDialog,
+    QMessageBox
 )
 from PyQt5.QtGui import QFont
 from teamclass import Team
@@ -24,6 +27,14 @@ q_path = os.path.join('.', 'qs.txt')
 anspath = os.path.join('.', 'ans.txt')
 titlePath = os.path.join('.', 'title.txt')
 teampath = os.path.join('.', 'teams.txt')
+finalqpath = os.path.join('.', 'final_q_a.txt')
+
+def extractFQ(path):
+    f = open(path)
+    c = f.read()
+    f.close()
+    lines = c.splitlines()
+    return lines[0], lines[1]
 
 def extractHeadings(path):  # list
     f = open(path)
@@ -90,9 +101,12 @@ class mainWindow(QMW):
     def setupUi(self):
         self.headings = extractHeadings(catspath)
         self.questions = extractQs(q_path)
+        self.finalq = extractFQ(finalqpath)
         self.answers = extractAns(anspath)  # get info from files
         self.teamnames = extractTeams(teampath)
         self.makeTeams()
+        
+        self.fqactivated = False
 
         self.container = QWidget(self)
         self.baselayout = QGL(self.container)  # setup layout
@@ -157,13 +171,21 @@ class mainWindow(QMW):
         self.ql.hide()  # hide for now
         self.baselayout.addWidget(self.ql, 2, 0)  # add it
 
+        # special button to view answer for final question
+        self.fqansbtn = QButton(self)
+        self.fqansbtn.setFont(self.font)
+        self.fqansbtn.setText('View Final Answer')
+        self.fqansbtn.clicked.connect(self.fqview)
+        self.fqansbtn.hide()
+        self.baselayout.addWidget(self.fqansbtn, 2, 1)
+
         # make button to view answer
         self.ansbtn = QButton(self)
         self.ansbtn.setFont(self.font)
         self.ansbtn.setText('View answer')
         self.ansbtn.clicked.connect(self.viewanswer)
         self.ansbtn.hide()  # hide for now
-        self.baselayout.addWidget(self.ansbtn, 2, 1)
+        self.baselayout.addWidget(self.ansbtn, 2, 2)
 
         # make button to give/deduct score for teams (right/wrong)
         self.rb = QButton(self)
@@ -171,16 +193,24 @@ class mainWindow(QMW):
         self.rb.setText('Right')
         self.rb.hide()  # you don't want to see this for now
         self.rb.clicked.connect(self.rightHandler)
-        self.baselayout.addWidget(self.rb, 2, 2)
+        self.baselayout.addWidget(self.rb, 2, 3)
 
         self.wb = QButton(self)
         self.wb.setFont(self.font)
         self.wb.setText('Wrong')
         self.wb.hide()
         self.wb.clicked.connect(self.wrongHandler)
-        self.baselayout.addWidget(self.wb, 2, 3)
+        self.baselayout.addWidget(self.wb, 2, 4)
 
         self.baselayout.addLayout(self.layout, 1, 0)  # add sublayout
+
+        self.fqbutton = QButton(self)
+        self.fqbutton.setFont(self.font)
+        self.fqbutton.setText('Final Question')
+        self.fqbutton.show()
+        self.fqbutton.clicked.connect(self.fq)
+        self.baselayout.addWidget(self.fqbutton, 3, 0)
+        
 
         self.teamlayout = QGL(self)
         # add team names and score for each team
@@ -191,11 +221,63 @@ class mainWindow(QMW):
             label.setText(team.name + ' - Score: {0}'.format(team.score))
             self.teamlayout.addWidget(label, self.teams.index(team), 0)
 
-        self.baselayout.addLayout(self.teamlayout, 3, 0)
+        self.baselayout.addLayout(self.teamlayout, 4, 0)
         self.container.setLayout(self.baselayout)  # set main layout
         self.setCentralWidget(self.container)  # yeah do that
         self.setWindowTitle('Jeopardy!')  # window title
         self.show()  # obviously
+
+    def fq(self):
+        self.fqactivated = True
+        self.ql.setText(self.finalq[0])
+        self.ql.show()
+        self.rb.hide();self.wb.hide()
+        self.currentTeam = self.teams[0]
+        self.updateTeamLabel(self.currentTeam.name)
+        self.pointsbet = []
+        
+        for team in self.teams: # get amount of points each team is betting
+            ok = False
+            while not ok:
+                points, ok = QInputDialog().getInt(self, 'Points', 'Points {0} is betting for the final question: '.format(team.name))
+                if points > abs(team.score):
+                    msgb = QMessageBox()
+                    msgb.setWindowTitle('Error!')
+                    msgb.setText('The team does not have that much points!')
+                    msgb.exec()
+                    ok = False
+                if points < 0:
+                    msgb = QMessageBox()
+                    msgb.setWindowTitle('Error!')
+                    msgb.setText('You cannot bet negative points!')
+                    msgb.exec()
+                    ok = False
+            self.pointsbet.append(points)
+            # print(points)
+        
+        self.fqansbtn.show()
+        
+
+    def fqview(self):
+        self.ql.setText(self.finalq[1])
+        self.fqansbtn.hide()
+        self.rb.show()
+        self.wb.show()
+        # TODO: disconnect button handlers and connect new ones
+        self.rb.disconnect()
+        self.wb.disconnect()
+        self.rb.clicked.connect(self.fqr)
+        self.wb.clicked.connect(self.fqw)
+        # no point connecting to original bc the game ended
+        
+    
+    def fqr(self):
+        self.currentTeam.score += self.pointsbet[self.teams.index(self.currentTeam)]
+        self.updateTeam()
+
+    def fqw(self):
+        self.currentTeam.score -= self.pointsbet[self.teams.index(self.currentTeam)]
+        self.updateTeam()
 
     def buttonhandle(self):
         sender = self.sender()  # get sender (in this case always a button)
@@ -233,11 +315,13 @@ class mainWindow(QMW):
         self.currentTeam.score += self.currentscore
         self.updateTeam()
         self.rb.hide()
+        self.wb.hide()
 
-    def wrongHandler(self):
+    def wrongHandler(self, h=True):
         self.currentTeam.score -= self.currentscore
         self.updateTeam()
         self.wb.hide()
+        self.rb.hide()
 
     def updateTeam(self):
         labelIndex = self.teams.index(self.currentTeam)
@@ -250,8 +334,26 @@ class mainWindow(QMW):
         else:
             self.currentTeam = self.teams[labelIndex + 1]
         self.cTeamLabel.setText('Current team: ' + self.currentTeam.name)
-        self.rb.hide()
-        self.wb.hide()
+        # self.rb.hide()
+        # self.wb.hide()
+        
+        # if game ended
+        if self.fqactivated and self.currentTeam == self.teams[0]:
+            msgb = QMessageBox()
+            msgb.setWindowTitle('Winner')
+            
+            # get highest team
+            ht = Team('None')
+            for t in self.teams:
+                if t.score > ht.score:
+                    ht = t
+            
+            msgb.setText('{0} won with {1} points!'.format(ht.name, ht.score))
+            msgb.exec()
+            self.close()
+    
+    def updateTeamLabel(self, teamname):
+        self.cTeamLabel.setText('Current team: ' + teamname)
 
 
 if __name__ == '__main__':
