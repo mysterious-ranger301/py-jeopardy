@@ -7,6 +7,7 @@ Last update: 2022/03/27 (YYYY-MM-DD)
 
  - Uploaded executable (for Windows)
  - Added Final Question
+ - Added ending
  - Code is even messier, but it works!
 
 # Setup
@@ -54,6 +55,12 @@ Anyways, here are the other files' meanings
 _ans.txt_ names the answers to the questions in _qs.txt_ (there _has_ to be the same amount of questions as there is answers)
 
 _title.txt_ names the title of the game
+
+_final\_q\_a.txt_ has the final question and answer, question being on line 1, ans answer being on line 2
+
+*Example Final Question*
+
+*Example Final Answer*
 
 If you're still confused, look at the example files you already have (you downloaded them with this).
 
