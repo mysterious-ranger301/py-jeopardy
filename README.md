@@ -27,6 +27,8 @@ You may have noticed that there are files attached to this repository, and they 
 
 _headings.txt_ names the categories of the Jeopardy questions.
 
+NOTE: none of the headings can have special characters (-,+,", etc.)
+
 _qs.txt_ names the questions for each category
 
 Now this file (and _ans.txt_) in particular have a specific format you MUST follow in order to customize it:
