@@ -5,7 +5,6 @@ Last update: 2022/03/27 (YYYY-MM-DD)
 
 # What's new in update 22.03.27
 
- - Uploaded executable (for Windows)
  - Added Final Question
  - Added ending
  - Code is even messier, but it works!
