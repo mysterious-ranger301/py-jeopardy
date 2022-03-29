@@ -1,0 +1,20 @@
+{
+	"title": "Example Jeopardy!",
+	"Category 1":
+	{	
+		"q1": "a1",
+		"q2": "a2",
+		"q3": "a3",
+		"q4": "a4",
+		"q5": "a5"
+	},
+	"Category 2":
+	{
+		"q1": "a1",
+		"q2": "a2",
+		"q3": "a3",
+		"q4": "a4",
+		"q5": "a5"
+	},
+	"final": {"final question": "final answer"}
+}
