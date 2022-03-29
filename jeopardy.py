@@ -269,8 +269,6 @@ class mainWindow(QMW):
 
     def fq(self):
         self.fqactivated = True
-        self.ql.setText(self.finalq[0])
-        self.ql.show()
         self.rb.hide();self.wb.hide()
         self.currentTeam = self.teams[0]
         self.updateTeamLabel(self.currentTeam.name)
@@ -296,6 +294,8 @@ class mainWindow(QMW):
             # print(points)
         
         self.fqansbtn.show()
+        self.ql.setText(self.finalq[0])
+        self.ql.show()
         
 
     def fqview(self):
