@@ -37,4 +37,28 @@ This is really simple, all you have to do is:
 
 - Type _py jeopardy.py_ for Windows and _python3 jeopardy.py_ for Linux
 
-That's it! Now you can use this for any games you want!
+If this doesn't work on Windows, try the next optional step.
+
+# Compiling to an EXE (Optional, Windows Only)
+
+If you want to shorten the launching process (I do), then you can compile this into
+
+an exe file (if you're on Windows). All you have to do is:
+
+1 - Open CMD (press Win+R and type _cmd_)
+
+2 - Change directory to where the .py file is located (cd _c:\path\to\your\py\file_, mine is _C:\Users\name\Downloads\py-jeopardy-main_)
+
+3 - Execute _pyinstaller_. Type into CMD: _pyinstaller --onefile jeopardy.py_
+
+This will compile the program into an exe. If there's an error such as "pyinstaller is not recognized as a command", then type
+
+_pip install pyinstaller_ and try again.
+
+I assume you have added Python to PATH, right? If you haven't, go to Start -> Search -> and type "Edit system environment variables"
+
+Then click Environment Variables, double-click PATH, click New, and type your Python Scripts directory (usually _C:\PythonDirectory\Scripts_)
+
+Click save, and you're done. Then you can repeat the above steps to compile the program into an exe file.
+
+If you're lost or something doesn't work, open up an issue and I'd be happy to help you!
