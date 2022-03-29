@@ -1,13 +1,13 @@
 # py-jeopardy
 A fully customizeable Jeopardy game made with Python and PyQt5!
 
-Last update: 2022/03/27 (YYYY-MM-DD)
+Last update: 2022/03/28 (YYYY-MM-DD)
 
-# What's new in update 22.03.27
+# What's new in update 22.03.28
 
- - Added Final Question
- - Added ending
- - Code is even messier, but it works!
+ - Added save system (automatically saves when you close unfinished game)
+ - Added ending (last update actually)
+ - Remade configuration system (it's 2 files now instead of 6 or something)
 
 # Setup
 I assume you have Python installed, but if not, go to https://python.org and download Python.
@@ -23,47 +23,12 @@ instead of _pip_ make sure to type in _pip3_.
 That's it for libraries, now to customization.
 
 # Customization
-You may have noticed that there are files attached to this repository, and they serve a useful purpose.
 
-_headings.txt_ names the categories of the Jeopardy questions.
+Most of the configuration is stored in _config.json_. Now, if you don't know how to
 
-NOTE: none of the headings can have special characters (-,+,", etc.)
+edit JSON files, I recommend you google it or check the included _config.json_.
 
-_qs.txt_ names the questions for each category
-
-Now this file (and _ans.txt_) in particular have a specific format you MUST follow in order to customize it:
-
-_Start of file_
-
-_Example question 1 through 5_
-
-\n
-
-\n
-
-_Other questions 1 through 5_
-
-_End of file_
-
-(By the way \n means a newline)
-
-Notice that? There _has to be 2 newlines in between the different questions in order for the program to read the file properly_. 
-
-If you do not follow this format, the program will not work.
-
-Anyways, here are the other files' meanings
-
-_ans.txt_ names the answers to the questions in _qs.txt_ (there _has_ to be the same amount of questions as there is answers)
-
-_title.txt_ names the title of the game
-
-_final\_q\_a.txt_ has the final question and answer, question being on line 1, and answer being on line 2
-
-*Example Final Question*
-
-*Example Final Answer*
-
-If you're still confused, look at the example files you already have (you downloaded them with this).
+Team names are stored in _teams.txt_. Each team name is on each line (again, check included files).
 
 # Launching
 This is really simple, all you have to do is:
