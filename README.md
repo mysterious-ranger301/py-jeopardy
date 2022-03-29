@@ -6,7 +6,7 @@ Last update: 2022/03/28 (YYYY-MM-DD)
 # What's new in update 22.03.28
 
  - Added save system (automatically saves when you close unfinished game)
- - Added ending (last update actually)
+ - Added ending (last update actually, oops)
  - Remade configuration system (it's 2 files now instead of 6 or something)
 
 # Setup
