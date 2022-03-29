@@ -8,6 +8,8 @@ Jeopardy.py - a Jeopardy game made with PyQt5
 Version 22.03.27
 """
 
+# TODO: add save load/export
+
 from PyQt5.QtWidgets import (
     QApplication as QApp,
     QMainWindow as QMW,
@@ -21,65 +23,15 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from teamclass import Team
 import os
+import json
 
-catspath = os.path.join('.', 'headings.txt')
-q_path = os.path.join('.', 'qs.txt')
-anspath = os.path.join('.', 'ans.txt')
-titlePath = os.path.join('.', 'title.txt')
+# catspath = os.path.join('.', 'headings.txt')
+# q_path = os.path.join('.', 'qs.txt')
+# anspath = os.path.join('.', 'ans.txt')
+# titlePath = os.path.join('.', 'title.txt')
 teampath = os.path.join('.', 'teams.txt')
-finalqpath = os.path.join('.', 'final_q_a.txt')
-
-def extractFQ(path):
-    f = open(path)
-    c = f.read()
-    f.close()
-    lines = c.splitlines()
-    return lines[0], lines[1]
-
-def extractHeadings(path):  # list
-    f = open(path)
-    content = f.read()
-    f.close()
-    return content.splitlines()
-
-
-def extractQs(path):  # list of lists
-    f = open(path)
-    content = f.read()
-    f.close()
-    # format goes like this: *spam*\n\n*spam*\n\n
-    # every \n\n is a separator, every \n is joining
-    cats = content.split('\n\n')
-    total = []
-    for cat in cats:
-        cat = cat.split('\n')
-        if '' in cat:
-            cat.remove('')
-        total.append(cat)
-    return total
-
-
-def extractTitle(path):
-    f = open(path)
-    c = f.read()
-    f.close()
-    return c
-
-
-def extractAns(path):
-    f = open(path)
-    content = f.read()
-    f.close()
-
-    cats = content.split('\n\n')
-    total = []
-    for cat in cats:
-        cat = cat.split('\n')
-        if '' in cat:
-            cat.remove('')
-        total.append(cat)
-    return total
-
+# finalqpath = os.path.join('.', 'final_q_a.txt')
+configpath = os.path.join('.', 'config.json')
 
 def extractTeams(path):
     f = open(path)
@@ -87,6 +39,44 @@ def extractTeams(path):
     f.close()
     return c.splitlines()
 
+def getConfig(path='config.json'):
+    config = json.loads(open(path).read()) # read file
+    # returns list, i0 is title, i1 is list of headings, 
+    # i2 is qs, i3 is ans, i4 is final q/a
+    total = []
+    total.append(config['title'])
+    
+    headings = []
+    for k, v in config.items():
+        if k == 'title' or k == 'final': continue # we dont want this
+        headings.append(k)
+    total.append(headings)
+    
+    qs = []
+    ans = []
+    for h in headings:
+        questions = config[h]
+        hqs = []
+        has = []
+        for qu, an in questions.items():
+            hqs.append(qu)
+            has.append(an)
+        qs.append(hqs)
+        ans.append(has)
+    
+    total.append(qs)
+    total.append(ans)
+    # total.append([qs])
+    # total.append([ans])
+    
+    final = []
+    
+    for fq, fa in config['final'].items():
+        final.append(fq)
+        final.append(fa)
+    total.append(final)
+    
+    return total
 
 # FOLLOW THIS:
 # q = questions[button.headingindex][button.questionindex]
@@ -94,15 +84,37 @@ def extractTeams(path):
 
 
 class mainWindow(QMW):
-    def __init__(self, catspath, q_path, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi()  # main setup
 
     def setupUi(self):
-        self.headings = extractHeadings(catspath)
-        self.questions = extractQs(q_path)
-        self.finalq = extractFQ(finalqpath)
-        self.answers = extractAns(anspath)  # get info from files
+        # self.headings = extractHeadings(catspath)
+        # self.questions = extractQs(q_path)
+        # self.finalq = extractFQ(finalqpath)
+        # self.answers = extractAns(anspath)  # get info from files
+        config = getConfig(configpath)
+        # print(config)
+        self.headings = config[1]
+        self.questions = config[2]
+        self.answers = config[3]
+        self.finalq = config[4]
+        
+        self.clickedbs = []
+        
+        self.save_exists = False
+        if os.path.exists('save.json'):
+            load = QMessageBox().question(self, 'Load', 'save.json was found. Load game from it?', QMessageBox.Yes, QMessageBox.No)
+            if load == QMessageBox.Yes:
+                self.save_exists = True
+                print('save exists')
+        
+        if self.save_exists:
+            data = json.loads(open('save.json').read())
+            self.clickedbs = data['clicked']
+        
+        self.gamedone = False
+        
         self.teamnames = extractTeams(teampath)
         self.makeTeams()
         
@@ -118,7 +130,7 @@ class mainWindow(QMW):
 
         self.label = QLabel(self)
         self.label.setFont(self.font)
-        self.label.setText(extractTitle(titlePath))  # title!
+        self.label.setText(config[0])  # title!
         self.baselayout.addWidget(self.label, 0, 0)  # REMEMBER, Y THEN X
 
         self.cTeamLabel = QLabel(self)
@@ -128,7 +140,7 @@ class mainWindow(QMW):
 
         # add heading text
         self.layout = QGL(self)  # make sublayout
-        for h in self.headings:  # set categories/headings
+        for h in self.headings:  # set categories/headings (wtf is this)
             exec(
                 'self.h_{0} = QLabel(self)'.format(
                     h.replace(' ', '_').replace('(', '').replace(')', '')
@@ -162,6 +174,11 @@ class mainWindow(QMW):
                 setattr(button, 'q', ii - 1)
                 button.clicked.connect(self.buttonhandle)
                 self.layout.addWidget(button, ii, i)
+                if self.save_exists:
+                    data = json.loads(open('save.json').read())
+                    # print(data['clicked'])
+                    if [button.cat, button.q-1] in data['clicked']:
+                        button.hide()
                 # print(ii, i)
 
         # make label for questions
@@ -227,6 +244,29 @@ class mainWindow(QMW):
         self.setWindowTitle('Jeopardy!')  # window title
         self.show()  # obviously
 
+    def closeEvent(self, event):
+        if self.gamedone:
+            event.accept()
+            return
+        msgb = QMessageBox()
+        msgb.setWindowTitle('Exit')
+        msgb.setText('Your progress will be saved to save.json')
+        msgb.exec()
+        event.accept()
+        self.savegame()
+
+    def savegame(self, export='save.json'):
+        data = {'score': {}, 'clicked': self.clickedbs, 'cteam': None}
+        
+        for team in self.teams:
+            data['score'][team.name] = team.score
+        
+        data['cteam'] = self.currentTeam.name
+        
+        f = open('save.json', 'w')
+        f.write(json.dumps(data))
+        f.close()
+
     def fq(self):
         self.fqactivated = True
         self.ql.setText(self.finalq[0])
@@ -288,12 +328,15 @@ class mainWindow(QMW):
             sender.cat,
             sender.q - 1,
         )  # set current question for self.viewanswer
+        # print(self.currentq)
         question = self.questions[sender.cat][sender.q - 1]  # hope this works
         if len(question) > 50:
         	question = question[:50] + '\n' + question[51:]
         self.ql.setText(question)  # set text for the viewer
         self.ql.show()  # show it
         self.currentscore = int(sender.text())
+
+        self.clickedbs.append(self.currentq)
 
         self.ansbtn.show()  # also show the view answer button
 
@@ -310,6 +353,13 @@ class mainWindow(QMW):
         for team in self.teamnames:
             self.teams.append(Team(team))
         self.currentTeam = self.teams[0]
+        
+        if self.save_exists:
+            data = json.loads(open('save.json').read())
+            for team in self.teams:
+                team.score = data['score'][team.name]
+                if team.name == data['cteam']:
+                    self.currentTeam = team
 
     def rightHandler(self):
         self.currentTeam.score += self.currentscore
@@ -350,6 +400,8 @@ class mainWindow(QMW):
             
             msgb.setText('{0} won with {1} points!'.format(ht.name, ht.score))
             msgb.exec()
+            self.gamedone = True
+            os.remove('save.json')
             self.close()
     
     def updateTeamLabel(self, teamname):
@@ -358,7 +410,7 @@ class mainWindow(QMW):
 
 if __name__ == '__main__':
     app = QApp([])
-    m = mainWindow(catspath, q_path)
+    m = mainWindow()
     #m.maximize_window()
     #    print(m.headings)
     #    print(m.questions)
