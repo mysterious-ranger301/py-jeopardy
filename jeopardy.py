@@ -8,8 +8,6 @@ Jeopardy.py - a Jeopardy game made with PyQt5
 Version 22.03.28
 """
 
-# TODO: add save load/export
-
 from PyQt5.QtWidgets import (
     QApplication as QApp,
     QMainWindow as QMW,
