@@ -5,7 +5,7 @@ Created on Mon Dec 13 13:00:29 2021
 
 @author: alexey
 Jeopardy.py - a Jeopardy game made with PyQt5
-Version 22.03.27
+Version 22.03.28
 """
 
 # TODO: add save load/export
